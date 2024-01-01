@@ -6,43 +6,49 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <tuple>
 
 using namespace std;
 class Problem3 {
 public:
-    int shortestPath(vector<string>& maze) {
+    struct Point {
+        int row, col, distance;
+    };
+    //Big O(rows*columns) as the algorithms visits each node of maze once
+    int shortestPath(vector<vector<char>>& maze) {
         int rows = maze.size();
+        if (rows == 0) return -1;
         int cols = maze[0].size();
-        pair<int, int> start, end;
+        if (cols == 0) return -1;
+        int dr[] = {-1, 0, 0, 1};
+        int dc[] = {0, -1, 1, 0};
+        int startRow = -1, startCol = -1;
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 if (maze[i][j] == 'S') {
-                    start = make_pair(i, j);
-                } else if (maze[i][j] == 'E') {
-                    end = make_pair(i, j);
+                    startRow = i;
+                    startCol = j;
+                    break;
                 }
             }
+            if (startRow != -1) break;
         }
-        vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-        queue<tuple<int, int, int>> q;  // {row, col, distance}
-        q.push(make_tuple(start.first, start.second, 0));
-        vector<vector<bool>> visited(rows, vector<bool>(cols, false));
-        visited[start.first][start.second] = true;
+        if (startRow == -1) return -1;
+        queue<Point> q;
+        q.push({startRow, startCol, 0});
+        maze[startRow][startCol] = '#';
         while (!q.empty()) {
-            int row, col, distance;
-            tie(row, col, distance) = q.front();
+            Point current = q.front();
             q.pop();
-            if (make_pair(row, col) == end) {
-                return distance;
-            }
-            for (const auto& dir : directions) {
-                int newRow = row + dir.first;
-                int newCol = col + dir.second;
-                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols &&
-                    maze[newRow][newCol] == '.' && !visited[newRow][newCol]) {
-                    visited[newRow][newCol] = true;
-                    q.push(make_tuple(newRow, newCol, distance + 1));
+            for (int i = 0; i < 4; ++i) {
+                int nextRow = current.row + dr[i];
+                int nextCol = current.col + dc[i];
+                if (nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols &&
+                    maze[nextRow][nextCol] != '#') {
+                    if (maze[nextRow][nextCol] == 'E') {
+                        return current.distance + 1;
+                    }
+                    q.push({nextRow, nextCol, current.distance + 1});
+                    maze[nextRow][nextCol] = '#';
                 }
             }
         }
