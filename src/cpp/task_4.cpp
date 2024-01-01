@@ -9,8 +9,10 @@
 #include <queue>
 #include <unordered_map>
 #include <climits>
+
 class Problem4 {
 public:
+    //Big O(E*logV) where E is number of edges and V is number of vertices
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
         unordered_map<int, vector<pair<int, int>>> graph;
         for (const auto& edge : times) {
