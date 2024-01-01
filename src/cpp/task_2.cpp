@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <cmath>
+#include <climits>
 
 using namespace std;
 
@@ -15,6 +15,7 @@ public:
     void addEdge(vector<vector<Edge2>>& graph, int from, int to, int capacity) {
         graph[from].push_back({to, capacity, 0});
     }
+    //Big O(E*V^2) where V is number of vertices and E is number of Edges
     int edmondsKarp(vector<vector<Edge2>>& graph, int source, int sink) {
         int totalFlow = 0;
         while (true) {
@@ -34,7 +35,7 @@ public:
             if (pred[sink] == -1) {
                 break;
             }
-            int pathFlow = INFINITY;
+            int pathFlow = INT_MAX;
             for (int u = sink; u != source; u = pred[u]) {
                 for (const Edge2& e : graph[pred[u]]) {
                     if (e.to == u) {
