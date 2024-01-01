@@ -6,7 +6,7 @@
 #include <vector>
 #include <list>
 #include <queue>
-#include <cmath>
+#include <climits>
 using namespace std;
 struct Edge {
     int to;
@@ -17,7 +17,7 @@ public:
     //big O((V+E)logV) where V is number of Vertices and E is number of Edges
     void dijkstra(vector<vector<Edge>>& graph, int start, vector<int>& distance, vector<int>& predecessor) {
         int n = graph.size();
-        distance.assign(n, INFINITY);
+        distance.assign(n, INT_MAX);
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
         distance[start] = 0;
         pq.push({0, start});
